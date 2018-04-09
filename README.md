@@ -17,5 +17,3 @@ I inlined the "style.css" into the index.html because it was small and eliminate
 #### Part 2: Optimize Frames per Second in pizza.html
 
 I updated the functions changePizzaSizes and updatePositions to separate reading and calculating from writing styles. By separating the writing of the style information you avoid forced layout and keep the javascript>styles>layout>composite>paint pipeline from looping on itself.
-
-Other optimizations included making sure the background, pizza graphics and content were on appropriate layers to allow the browser to composite the page efficiently. 

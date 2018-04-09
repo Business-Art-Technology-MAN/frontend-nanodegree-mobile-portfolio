@@ -33,16 +33,11 @@ form {
   position: fixed;
   width: 256px;
   z-index: -1;
-  transform: translateZ(0);
-  will-change: transform;
 }
 
 .randomPizzaContainer {
   float: left;
   display: flex;
-  /* BAT-MAN promote layer for changes */
-  transform: translateZ(0);
-  will-change: transform;
 }
 
 .randomPizzaContainer:after {
@@ -53,7 +48,4 @@ form {
 
  .container {
   background-color: rgba(240, 60, 60, 0.8);
-  /* BAT-MAN promote layer for changes */
-  transform: translateZ(0);
-  will-change: transform;
 }

@@ -458,20 +458,16 @@ var resizePizzas = function(size) {
 
     //BAT-MAN call quearySelctorAll onces and assign variable and move layout out of loop
     
-    var qsaPizzasCollection = document.querySelectorAll(".randomPizzaContainer");
-    var pizzaArray = Array.prototype.slice.apply(qsaPizzasCollection);
+    var qsaPizzasCollection =document.getElementsByClassName('randomPizzaContainer');
+    var pizzaArray = Array.from(qsaPizzasCollection);
     //avoid memory allocation in loops when you can
-    var dx =0;
-    var arrWidth = [];
-    //read properties and calculate and store new width
-    pizzaArray.forEach(function(elem, index, arr) {
-       dx = determineDx(elem, size);
-       arrWidth.push((elem.offsetWidth + dx) + 'px');
-      //arr[index].style.width = newwidth;
-    });
+    //dx and newwidth are constant accross all pizzas
+    var dx = determineDx(pizzaArray[1], size);
+    var newwidth = ((pizzaArray[1].offsetWidth + dx) + 'px');
+  
     //write new widths
     pizzaArray.forEach(function(elem, index, arr) {
-      arr[index].style.width = arrWidth[index];
+      arr[index].style.width = newwidth;
    });
   }
 
@@ -520,24 +516,21 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var items = Array.prototype.slice.apply(document.querySelectorAll('.mover'));
+  var items = Array.from(document.getElementsByClassName('mover'));
   // document.body.scrollTop is no longer supported in Chrome.
+  var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
   
-  var phase = 0.0;
   var arrNewPosition=[];
+  var phase = [];
   //read loop
-  items.forEach(function(elem){
-    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    phase = Math.sin((scrollTop / 1250) + (i % 5));
-    arrNewPosition.push(elem.basicLeft + 100 * phase + 'px');
-  });
-
+  for (var i = 0; i < 5; i++) {
+      phase.push(Math.sin(scrollTop / 1250 + i) * 100);
+  }
+  
   //write loop
-  items.forEach(function(elem, index, arr){
-    
-    arr[index].style.left = arrNewPosition[index];
+  items.forEach(function(elem, index, arr) {
+    arr[index].style.left = arr[index].basicLeft + phase[index%5] + 'px';
   });
-
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
   window.performance.mark("mark_end_frame");
@@ -555,7 +548,10 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
+  //BAT-MAN calculate the number of pizzas needed for the screen size.
+  numPizzas = Math.floor(window.innerHeight / 100) * cols;
+  //console.log(numPizzas);
+  for (var i = 0; i < numPizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
